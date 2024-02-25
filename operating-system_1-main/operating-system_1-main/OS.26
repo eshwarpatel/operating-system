@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    FILE *filePointer;
+    int num;
+
+    filePointer = fopen("numbers.txt", "w");
+
+    if (filePointer == NULL) {
+        printf("Error! File could not be opened.\n");
+        exit(1);
+    }
+
+    fprintf(filePointer, "%d", 123);
+
+    fclose(filePointer);
+
+    filePointer = fopen("numbers.txt", "r");
+
+    if (filePointer == NULL) {
+        printf("Error! File could not be opened.\n");
+        exit(1);
+    }
+
+    fscanf(filePointer, "%d", &num);
+
+    fclose(filePointer);
+
+    printf("The integer read from the file is: %d\n", num);
+
+    return 0;
+}

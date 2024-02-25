@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+
+int main(int argc, char *argv[]) {
+    DIR *directory;
+    struct dirent *dir_entry;
+
+    if (argc < 2) {
+        directory = opendir(".");
+    } else {
+     
+        directory = opendir(argv[1]);
+    }
+
+    if (directory == NULL) {
+        perror("opendir");
+        exit(EXIT_FAILURE);
+    }
+
+    while ((dir_entry = readdir(directory)) != NULL) {
+        printf("%s\n", dir_entry->d_name);
+    }
+
+    closedir(directory);
+
+    return 0;
+}

@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_FRAMES 3
+
+typedef struct {
+    int page_number;
+    int last_used;
+} Page;
+
+int main() {
+    int page_sequence[] = {0, 1, 2, 3, 0, 1, 4, 0, 1, 2, 3, 4}; 
+    int num_pages = sizeof(page_sequence) / sizeof(page_sequence[0]);
+    Page frames[MAX_FRAMES];
+    int page_faults = 0;
+
+    for (int i = 0; i < MAX_FRAMES; i++) {
+        frames[i].page_number = -1;
+        frames[i].last_used = 0;
+    }
+
+    for (int i = 0; i < num_pages; i++) {
+        int page_number = page_sequence[i];
+        int page_found = 0;
+
+        for (int j = 0; j < MAX_FRAMES; j++) {
+            if (frames[j].page_number == page_number) {
+                frames[j].last_used = i;
+                page_found = 1;
+                break;
+            }
+        }
+
+        if (!page_found) {
+    
+            int lru_index = 0;
+            for (int j = 1; j < MAX_FRAMES; j++) {
+                if (frames[j].last_used < frames[lru_index].last_used) {
+                    lru_index = j;
+                }
+            }
+
+            frames[lru_index].page_number = page_number;
+            frames[lru_index].last_used = i;
+            page_faults++;
+        }
+
+        printf("Memory at step %d: ", i + 1);
+        for (int j = 0; j < MAX_FRAMES; j++) {
+            if (frames[j].page_number == -1) {
+                printf("[ ] ");
+            } else {
+                printf("[%d] ", frames[j].page_number);
+            }
+        }
+        printf("\n");
+    }
+
+    printf("Total Page Faults: %d\n", page_faults);
+
+    return 0;
+}
